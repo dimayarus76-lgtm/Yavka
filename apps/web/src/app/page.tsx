@@ -1,4 +1,10 @@
+'use client';   // ← Это важно добавить в самом начале
+
 export default function Home() {
+  const openMap = () => {
+    alert('Карта Ярославля пока в разработке.\nСкоро будет полноценная интерактивная карта!');
+  };
+
   return (
     <main className="min-h-screen bg-slate-950 text-white overflow-hidden">
       {/* Header */}
@@ -47,7 +53,7 @@ export default function Home() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button 
-              onClick={() => alert('Карта Ярославля — в разработке')}
+              onClick={openMap}
               className="bg-yellow-500 hover:bg-yellow-400 text-black text-xl px-12 py-5 rounded-2xl font-bold transition flex items-center justify-center gap-3 shadow-lg"
             >
               🗺️ Открыть карту
