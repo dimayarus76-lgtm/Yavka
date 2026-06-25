@@ -6,32 +6,46 @@ export default function MapPage() {
   const mapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    console.log("✅ useEffect запустился");
-    console.log("API Key:", process.env.NEXT_PUBLIC_YANDEX_MAPS_API_KEY);
+    console.log("🚀 useEffect запущен");
 
     const apiKey = process.env.NEXT_PUBLIC_YANDEX_MAPS_API_KEY;
+    console.log("🔑 API Key из env:", apiKey ? "ПРИСУТСТВУЕТ" : "ОТСУТСТВУЕТ");
+
     if (!apiKey) {
       console.error("❌ Нет API ключа!");
       return;
     }
 
+    console.log("📥 Начинаем загрузку скрипта Яндекс.Карт...");
+
     const script = document.createElement('script');
     script.src = `https://api-maps.yandex.ru/2.1/?apikey=${apiKey}&lang=ru_RU`;
     script.async = true;
+
     script.onload = () => {
-      console.log("✅ Скрипт Яндекс.Карт загружен");
+      console.log("✅ Скрипт успешно загружен!");
+      
       if (window.ymaps && mapRef.current) {
         window.ymaps.ready(() => {
-          console.log("✅ ymaps.ready");
-          const map = new window.ymaps.Map(mapRef.current!, {
-            center: [57.6261, 39.8845],
-            zoom: 13,
-          });
-          console.log("✅ Карта создана!");
+          console.log("✅ ymaps.ready — можно создавать карту");
+          
+          try {
+            const map = new window.ymaps.Map(mapRef.current!, {
+              center: [57.6261, 39.8845],
+              zoom: 13,
+            });
+            console.log("🎉 Карта успешно создана!");
+          } catch (e) {
+            console.error("Ошибка создания карты:", e);
+          }
         });
       }
     };
+
+    script.onerror = () => console.error("❌ Ошибка загрузки скрипта");
+
     document.head.appendChild(script);
+
   }, []);
 
   return (
@@ -42,13 +56,10 @@ export default function MapPage() {
             <button onClick={() => window.history.back()} className="text-4xl hover:text-yellow-400">←</button>
             <h1 className="text-3xl font-bold">Карта Ярославля — Явка</h1>
           </div>
-          <div className="bg-green-500/20 text-green-400 px-4 py-1 rounded-full text-sm font-medium">
-            Онлайн: 27 человек
-          </div>
         </div>
       </header>
 
-      <div ref={mapRef} className="w-full h-[calc(100vh-73px)] bg-slate-800" />
+      <div ref={mapRef} className="w-full h-[calc(100vh-73px)] bg-slate-900" />
     </div>
   );
 }
