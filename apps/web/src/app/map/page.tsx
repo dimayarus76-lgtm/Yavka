@@ -1,44 +1,70 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
+
+declare global {
+  interface Window {
+    ymaps: any;
+  }
+}
 
 export default function MapPage() {
+  const mapRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
-    // Здесь позже будет полноценная карта
-    console.log('Карта Ярославля загружена');
+    const loadYandexMaps = () => {
+      if (window.ymaps) {
+        window.ymaps.ready(() => {
+          if (mapRef.current) {
+            const map = new window.ymaps.Map(mapRef.current, {
+              center: [57.6261, 39.8845], // Центр Ярославля
+              zoom: 13,
+            });
+
+            // Пример метки
+            const placemark = new window.ymaps.Placemark([57.6261, 39.8845], {
+              hintContent: 'Центр Ярославля',
+              balloonContent: 'Здесь будет собираться первая компания!',
+            });
+
+            map.geoObjects.add(placemark);
+          }
+        });
+      }
+    };
+
+    // Загружаем скрипт Яндекс.Карт
+    const script = document.createElement('script');
+    script.src = `https://api-maps.yandex.ru/2.1/?apikey=${process.env.NEXT_PUBLIC_YANDEX_MAPS_API_KEY || ''}&lang=ru_RU`;
+    script.async = true;
+    script.onload = loadYandexMaps;
+    document.head.appendChild(script);
+
+    return () => {
+      document.head.removeChild(script);
+    };
   }, []);
 
   return (
     <div className="min-h-screen bg-slate-950 text-white">
-      {/* Header */}
-      <header className="bg-slate-900 border-b border-slate-700 p-4">
+      <header className="bg-slate-900 border-b border-slate-700 p-4 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-3">
             <button 
               onClick={() => window.history.back()}
-              className="text-2xl hover:text-yellow-400"
+              className="text-3xl hover:text-yellow-400 transition"
             >
               ←
             </button>
-            <h1 className="text-2xl font-bold">Карта Ярославля</h1>
+            <h1 className="text-2xl font-bold">Карта Ярославля — Явка</h1>
           </div>
-          <div className="text-sm text-slate-400">Онлайн: 12 человек</div>
+          <div className="bg-green-500/20 text-green-400 px-4 py-1 rounded-full text-sm">
+            Онлайн: 18 человек
+          </div>
         </div>
       </header>
 
-      {/* Карта */}
-      <div className="relative h-[calc(100vh-70px)] bg-slate-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-6xl mb-6">🗺️</div>
-          <h2 className="text-3xl font-semibold mb-4">Интерактивная карта</h2>
-          <p className="text-slate-400 max-w-md mx-auto">
-            Здесь скоро появятся точки пользователей, сборы и места встреч в Ярославле
-          </p>
-          <div className="mt-10 text-sm text-slate-500">
-            Яндекс.Карты API будет подключён на следующем шаге
-          </div>
-        </div>
-      </div>
+      <div ref={mapRef} className="w-full h-[calc(100vh-70px)]" />
     </div>
   );
 }
