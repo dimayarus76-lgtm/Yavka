@@ -1,12 +1,9 @@
 'use client';
 
 export default function Home() {
-  const openMap = () => {
-    alert('Карта Ярославля пока в разработке.\n\nСкоро здесь будет полноценная интерактивная карта с точками пользователей!');
-  };
-
   return (
     <main className="min-h-screen bg-slate-950 text-white overflow-hidden">
+      {/* Header */}
       <header className="border-b border-slate-700 bg-slate-950/80 backdrop-blur-md fixed w-full z-50">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <div className="flex items-center gap-3">
@@ -15,7 +12,7 @@ export default function Home() {
           </div>
           
           <nav className="hidden md:flex gap-8 text-slate-300">
-            <a href="#" className="hover:text-white transition">Карта</a>
+            <a href="/map" className="hover:text-white transition">Карта</a>
             <a href="#" className="hover:text-white transition">Сборы</a>
             <a href="#" className="hover:text-white transition">Квесты</a>
           </nav>
@@ -26,6 +23,7 @@ export default function Home() {
         </div>
       </header>
 
+      {/* Hero Section */}
       <div className="relative h-screen flex items-center justify-center pt-16">
         <img 
           src="/images/hero.png" 
@@ -48,12 +46,12 @@ export default function Home() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-5 justify-center">
-            <button 
-              onClick={openMap}
-              className="bg-yellow-500 hover:bg-yellow-400 text-black text-xl px-14 py-6 rounded-2xl font-bold transition shadow-xl"
+            <a 
+              href="/map"
+              className="bg-yellow-500 hover:bg-yellow-400 text-black text-xl px-14 py-6 rounded-2xl font-bold transition shadow-xl inline-block text-center"
             >
               🗺️ Открыть карту Ярославля
-            </button>
+            </a>
             
             <button className="border-2 border-white/70 hover:bg-white/10 text-xl px-10 py-6 rounded-2xl font-medium transition">
               Как это работает?
