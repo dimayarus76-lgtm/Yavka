@@ -12,19 +12,21 @@ export default function MapPage() {
   const mapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const loadYandexMaps = () => {
+    const script = document.createElement('script');
+    script.src = `https://api-maps.yandex.ru/2.1/?apikey=${process.env.NEXT_PUBLIC_YANDEX_MAPS_API_KEY || ''}&lang=ru_RU`;
+    script.async = true;
+    script.onload = () => {
       if (window.ymaps) {
         window.ymaps.ready(() => {
           if (mapRef.current) {
             const map = new window.ymaps.Map(mapRef.current, {
-              center: [57.6261, 39.8845], // Центр Ярославля
+              center: [57.6261, 39.8845], // Ярославль
               zoom: 13,
             });
 
-            // Пример метки
             const placemark = new window.ymaps.Placemark([57.6261, 39.8845], {
               hintContent: 'Центр Ярославля',
-              balloonContent: 'Здесь будет собираться первая компания!',
+              balloonContent: '<strong>Здесь будет первая Явка!</strong>',
             });
 
             map.geoObjects.add(placemark);
@@ -32,16 +34,10 @@ export default function MapPage() {
         });
       }
     };
-
-    // Загружаем скрипт Яндекс.Карт
-    const script = document.createElement('script');
-    script.src = `https://api-maps.yandex.ru/2.1/?apikey=${process.env.NEXT_PUBLIC_YANDEX_MAPS_API_KEY || ''}&lang=ru_RU`;
-    script.async = true;
-    script.onload = loadYandexMaps;
     document.head.appendChild(script);
 
     return () => {
-      document.head.removeChild(script);
+      if (script.parentNode) script.parentNode.removeChild(script);
     };
   }, []);
 
@@ -58,8 +54,8 @@ export default function MapPage() {
             </button>
             <h1 className="text-2xl font-bold">Карта Ярославля — Явка</h1>
           </div>
-          <div className="bg-green-500/20 text-green-400 px-4 py-1 rounded-full text-sm">
-            Онлайн: 18 человек
+          <div className="bg-green-500/20 text-green-400 px-4 py-1 rounded-full text-sm font-medium">
+            Онлайн: 23 человека
           </div>
         </div>
       </header>
